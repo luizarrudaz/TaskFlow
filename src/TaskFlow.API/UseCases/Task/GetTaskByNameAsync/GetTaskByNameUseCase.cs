@@ -13,9 +13,9 @@ public class GetTaskByNameUseCase
         _taskService = taskService;
     }
 
-    public async Task<TaskEntity> Execute (string name)
+    public async Task<List<TaskEntity>> Execute (string name)
     {
-        var task = await _taskService.GetTaskByNameAsync(name);
+        var task = await _taskService.GetTasksByNameAsync(name);
 
         if(task == null)
         {

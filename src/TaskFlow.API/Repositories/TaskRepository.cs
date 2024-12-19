@@ -43,12 +43,18 @@ public class TaskRepository : ITaskRepository
         return task == null ? throw new KeyNotFoundException($"Task with ID {id} not found") : task;
     }
 
-    public async Task<TaskEntity> GetTaskByNameAsync(string name)
+    public async Task<List<TaskEntity>> GetTasksByNameAsync(string name)
     {
-        var task = await _dbContext.Set<TaskEntity>().FirstOrDefaultAsync(t => t.title == name);
+        var tasks = await _dbContext.Set<TaskEntity>()
+            .Where(t => string.IsNullOrEmpty(name) || EF.Functions
+            .ILike(t.title, $"%{name}%")).ToListAsync();
 
-        return task == null ? throw new KeyNotFoundException($"Task with NAME {name} not found") : task;
+        if (tasks == null || !tasks.Any())
+            throw new KeyNotFoundException($"No tasks found with NAME containing '{name}'");
+
+        return tasks;
     }
+
 
     public async Task UpdateTaskAsync(TaskEntity task)
     {

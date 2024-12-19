@@ -14,9 +14,9 @@ public class TaskService
         _taskRepository = taskRepository;
     }
 
-    public async Task<TaskEntity> GetTaskByNameAsync(string name)
+    public async Task<List<TaskEntity>> GetTasksByNameAsync(string name)
     {
-        return await _taskRepository.GetTaskByNameAsync(name);
+        return await _taskRepository.GetTasksByNameAsync(name);
     }
 
     public async Task<TaskEntity> GetTaskByIdAsync(int id)
