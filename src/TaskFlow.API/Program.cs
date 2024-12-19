@@ -13,6 +13,7 @@ using TaskFlow.API.UseCases.User.AuthenticateUser;
 using Microsoft.OpenApi.Models;
 using TaskFlow.API.UseCases.Task.DeleteTaskAsync;
 using TaskFlow.API.UseCases.Task.UpdateTaskAsync;
+using TaskFlow.API.UseCases.Task.GetTaskByNameAsync;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,8 +96,7 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DeleteTaskUseCase>();
 builder.Services.AddScoped<UpdateTaskUseCase>();
-
-
+builder.Services.AddScoped<GetTaskByNameUseCase>();
 
 var app = builder.Build();
 

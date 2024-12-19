@@ -16,10 +16,6 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskEntity> AddTaskAsync(TaskEntity task)
     {
-        //await _dbContext.Set<TaskEntity>().AddAsync(task);
-        //await _dbContext.SaveChangesAsync();
-        //return task;
-
         var createdTask = await _dbContext.Set<TaskEntity>().AddAsync(task);
         await _dbContext.SaveChangesAsync();
         return createdTask.Entity;
@@ -45,6 +41,13 @@ public class TaskRepository : ITaskRepository
         var task = await _dbContext.Set<TaskEntity>().FindAsync(id);
 
         return task == null ? throw new KeyNotFoundException($"Task with ID {id} not found") : task;
+    }
+
+    public async Task<TaskEntity> GetTaskByNameAsync(string name)
+    {
+        var task = await _dbContext.Set<TaskEntity>().FirstOrDefaultAsync(t => t.title == name);
+
+        return task == null ? throw new KeyNotFoundException($"Task with NAME {name} not found") : task;
     }
 
     public async Task UpdateTaskAsync(TaskEntity task)

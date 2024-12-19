@@ -4,6 +4,7 @@ namespace TaskFlow.API.Interfaces;
 
 public interface ITaskRepository
 {
+    Task<TaskEntity> GetTaskByNameAsync(string name);
     Task<TaskEntity> GetTaskByIdAsync(int id);
     Task<List<TaskEntity>> GetAllTasksAsync();
     Task<TaskEntity> AddTaskAsync(TaskEntity task);
