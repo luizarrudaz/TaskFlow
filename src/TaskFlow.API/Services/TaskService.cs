@@ -15,12 +15,12 @@ public class TaskService
         _taskRepository = taskRepository;
     }
 
-    public async Task<List<TaskEntity>> GetTasksByNameAsync(string name)
+    public async Task<List<TaskResponseDTO>> GetTasksByNameAsync(string name)
     {
         return await _taskRepository.GetTasksByNameAsync(name);
     }
 
-    public async Task<TaskEntity> GetTaskByIdAsync(int id)
+    public async Task<TaskResponseDTO> GetTaskByIdAsync(int id)
     {
         return await _taskRepository.GetTaskByIdAsync(id);
     }
@@ -47,7 +47,7 @@ public class TaskService
         return task;
     }
 
-    public async Task UpdateTaskAsync(TaskEntity task)
+    public async Task UpdateTaskAsync(TaskResponseDTO task)
     {
         if (task.status == Status.Completed && task.enddate > DateTime.UtcNow)
         {

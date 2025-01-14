@@ -1,4 +1,5 @@
-﻿using TaskFlow.API.Entities;
+﻿using TaskFlow.API.DTO.TaskResponseDTO;
+using TaskFlow.API.Entities;
 using TaskFlow.API.Services;
 
 namespace TaskFlow.API.UseCases.Task.DeleteTaskAsync;
@@ -12,7 +13,7 @@ public class DeleteTaskUseCase
         _taskService = taskService;
     }
 
-    public async Task<TaskEntity> ExecuteAsync(int taskId, int userid)
+    public async Task<TaskResponseDTO> ExecuteAsync(int taskId, int userid)
     {
         var task = await _taskService.GetTaskByIdAsync(taskId);
 

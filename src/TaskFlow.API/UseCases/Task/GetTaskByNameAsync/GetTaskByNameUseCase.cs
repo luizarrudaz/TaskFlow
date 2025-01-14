@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaskFlow.API.DTO.TaskResponseDTO;
 using TaskFlow.API.Entities;
 using TaskFlow.API.Services;
 
@@ -13,7 +14,7 @@ public class GetTaskByNameUseCase
         _taskService = taskService;
     }
 
-    public async Task<List<TaskEntity>> Execute (string name)
+    public async Task<List<TaskResponseDTO>> Execute (string name)
     {
         var task = await _taskService.GetTasksByNameAsync(name);
 

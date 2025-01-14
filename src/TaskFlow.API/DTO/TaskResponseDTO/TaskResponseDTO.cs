@@ -10,6 +10,7 @@ public class TaskResponseDTO
     public string description { get; set; } = string.Empty;
     public Priority priority { get; set; }
     public DateTime enddate { get; set; }
+    public DateTime updatedat { get; set; }
     public Status status { get; set; }
     public int userid { get; set; }
     public UserDTO? user { get; set; }

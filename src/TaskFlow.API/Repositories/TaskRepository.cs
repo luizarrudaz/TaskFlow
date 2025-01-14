@@ -43,6 +43,7 @@ public class TaskRepository : ITaskRepository
                     description = task.description,
                     priority = task.priority,
                     enddate = task.enddate,
+                    updatedat = task.updatedat,
                     status = task.status,
                     userid = task.userid,
                     user = task.user == null ? null : new UserDTO
@@ -53,18 +54,53 @@ public class TaskRepository : ITaskRepository
                 .ToListAsync();
     }
 
-    public async Task<TaskEntity> GetTaskByIdAsync(int id)
+    public async Task<TaskResponseDTO> GetTaskByIdAsync(int id)
     {
-        var task = await _dbContext.Set<TaskEntity>().FindAsync(id);
+        var task = await _dbContext.Set<TaskEntity>()
+            .Where(task => task.id == id)
+            .Select(task => new TaskResponseDTO
+            {
+                id = task.id,
+                title = task.title,
+                description = task.description,
+                priority = task.priority,
+                enddate = task.enddate,
+                updatedat = task.updatedat,
+                status = task.status,
+                userid = task.userid,
+                user = task.user == null ? null : new UserDTO
+                {
+                    username = task.user.username
+                }
+            })
+            .FirstOrDefaultAsync();
 
-        return task == null ? throw new KeyNotFoundException($"Task with ID {id} not found") : task;
+        if (task == null) { throw new KeyNotFoundException($"Task with ID {id} not found"); }
+
+        return task;
     }
 
-    public async Task<List<TaskEntity>> GetTasksByNameAsync(string name)
+
+    public async Task<List<TaskResponseDTO>> GetTasksByNameAsync(string name)
     {
         var tasks = await _dbContext.Set<TaskEntity>()
-            .Where(t => string.IsNullOrEmpty(name) || EF.Functions
-            .ILike(t.title, $"%{name}%")).ToListAsync();
+            .Where(t => string.IsNullOrEmpty(name) || EF.Functions.ILike(t.title, $"%{name}%"))
+            .Select(task => new TaskResponseDTO
+            {
+                id = task.id,
+                title = task.title,
+                description = task.description,
+                priority = task.priority,
+                enddate = task.enddate,
+                updatedat = task.updatedat,
+                status = task.status,
+                userid = task.userid,
+                user = task.user == null ? null : new UserDTO
+                {
+                    username = task.user.username
+                }
+            })
+            .ToListAsync();
 
         if (tasks == null || !tasks.Any())
             throw new KeyNotFoundException($"No tasks found with NAME containing '{name}'");
@@ -72,9 +108,10 @@ public class TaskRepository : ITaskRepository
         return tasks;
     }
 
-    public async Task UpdateTaskAsync(TaskEntity task)
+
+    public async Task UpdateTaskAsync(TaskResponseDTO task)
     {
-        _dbContext.Set<TaskEntity>().Update(task);
+        _dbContext.Set<TaskResponseDTO>().Update(task);
         await _dbContext.SaveChangesAsync();
     }
 

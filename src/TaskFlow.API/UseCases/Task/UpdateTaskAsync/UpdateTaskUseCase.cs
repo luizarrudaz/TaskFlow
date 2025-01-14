@@ -1,4 +1,5 @@
 ﻿using TaskFlow.API.DTO.TaskCreateDTO;
+using TaskFlow.API.DTO.TaskResponseDTO;
 using TaskFlow.API.Entities;
 using TaskFlow.API.Services;
 
@@ -13,25 +14,26 @@ public class UpdateTaskUseCase
         _taskService = taskService;
     }
 
-    public async Task<TaskEntity> ExecuteAsync(int taskId, int userId, TaskCreateAndUpdateDTO updateTaskDTO)
+    public async Task<TaskResponseDTO> ExecuteAsync(int taskId, int userId, TaskCreateAndUpdateDTO updateTaskDTO)
     {
-        var task = await _taskService.GetTaskByIdAsync(taskId);
+        var taskDTO = await _taskService.GetTaskByIdAsync(taskId);
 
-        if (task == null) { throw new KeyNotFoundException("Task not found"); }
+        if (taskDTO == null) { throw new KeyNotFoundException("Task not found"); }
 
-        if (task.userid != userId) { throw new UnauthorizedAccessException("You are no allowed to update this task"); }
+        if (taskDTO.userid != userId) { throw new UnauthorizedAccessException("You are not allowed to update this task"); }
 
-        task.title = updateTaskDTO.title ?? task.title;
-        task.description = updateTaskDTO.description ?? task.description;
-        task.priority = updateTaskDTO.priority;
-        task.enddate = updateTaskDTO.enddate.ToUniversalTime();
-        task.updatedat = DateTime.UtcNow;
-        task.status = updateTaskDTO.status;
+        // Atualiza os valores do DTO
+        taskDTO.title = updateTaskDTO.title ?? taskDTO.title;
+        taskDTO.description = updateTaskDTO.description ?? taskDTO.description;
+        taskDTO.priority = updateTaskDTO.priority;
+        taskDTO.enddate = updateTaskDTO.enddate.ToUniversalTime();
+        taskDTO.status = updateTaskDTO.status;
 
-        if (task.createdat.Kind != DateTimeKind.Utc) task.createdat = DateTime.SpecifyKind(task.createdat, DateTimeKind.Utc); 
-        if (task.updatedat.Kind != DateTimeKind.Utc) task.updatedat = DateTime.SpecifyKind(task.updatedat, DateTimeKind.Utc);
+        // Não seria necessário manipular o campo createdat diretamente no DTO, pois isso deve ser gerido pela entidade
 
-        await _taskService.UpdateTaskAsync(task);
-        return task;
+        // Aqui você pode salvar as mudanças, se necessário, e retornar o DTO atualizado.
+        await _taskService.UpdateTaskAsync(taskDTO);  // Atualize a lógica conforme necessário.
+
+        return taskDTO;
     }
 }
