@@ -17,5 +17,5 @@ public class TaskEntity
     public DateTime updatedat { get; set; } = DateTime.UtcNow;
 
     // Properties of navigation
-    public UserEntity? User { get; set; }
+    public UserEntity? user { get; set; }
 }

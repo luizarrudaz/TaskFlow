@@ -3,7 +3,7 @@ using TaskFlow.API.DTO.LoginModelDTO;
 using TaskFlow.API.UseCases.User.AuthenticateUser;
 
 namespace TaskFlow.API.Controllers;
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {
@@ -14,7 +14,7 @@ public class AuthController : ControllerBase
         _authenticateUserUseCase = authenticateUserUseCase;
     }
 
-    [HttpPost("login")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         var result = await _authenticateUserUseCase.ExecuteAsync(model.Username, model.Password);

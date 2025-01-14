@@ -11,7 +11,7 @@ using TaskFlow.API.UseCases.Task.UpdateTaskAsync;
 
 namespace TaskFlow.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class TaskController : ControllerBase
 {

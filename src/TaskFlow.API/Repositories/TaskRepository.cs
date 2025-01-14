@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskFlow.API.Database;
+using TaskFlow.API.DTO.TaskResponseDTO;
+using TaskFlow.API.DTO.TaskUserDTO;
 using TaskFlow.API.Entities;
 using TaskFlow.API.Interfaces;
 
@@ -31,9 +33,24 @@ public class TaskRepository : ITaskRepository
         }
     }
 
-    public async Task<List<TaskEntity>> GetAllTasksAsync()
+    public async Task<List<TaskResponseDTO>> GetAllTasksAsync()
     {
-        return await _dbContext.Set<TaskEntity>().ToListAsync();
+        return await _dbContext.Set<TaskEntity>()
+                .Select(task => new TaskResponseDTO
+                {
+                    id = task.id,
+                    title = task.title,
+                    description = task.description,
+                    priority = task.priority,
+                    enddate = task.enddate,
+                    status = task.status,
+                    userid = task.userid,
+                    user = task.user == null ? null : new UserDTO
+                    {
+                        username = task.user.username
+                    }
+                })
+                .ToListAsync();
     }
 
     public async Task<TaskEntity> GetTaskByIdAsync(int id)
@@ -54,7 +71,6 @@ public class TaskRepository : ITaskRepository
 
         return tasks;
     }
-
 
     public async Task UpdateTaskAsync(TaskEntity task)
     {

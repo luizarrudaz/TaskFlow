@@ -1,4 +1,5 @@
 ﻿using TaskFlow.API.DTO.TaskCreateDTO;
+using TaskFlow.API.DTO.TaskResponseDTO;
 using TaskFlow.API.Entities;
 using TaskFlow.API.Enums;
 using TaskFlow.API.Interfaces;
@@ -24,7 +25,7 @@ public class TaskService
         return await _taskRepository.GetTaskByIdAsync(id);
     }
 
-    public async Task<List<TaskEntity>> GetAllTasksAsync()
+    public async Task<List<TaskResponseDTO>> GetAllTasksAsync()
     {
         return await _taskRepository.GetAllTasksAsync();
     }
