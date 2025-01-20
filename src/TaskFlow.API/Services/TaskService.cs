@@ -34,7 +34,7 @@ public class TaskService
     {
         if (string.IsNullOrWhiteSpace(task.title))
         {
-            throw new ArgumentNullException("Title cannot be empty");
+            throw new ArgumentNullException(nameof(task.title), "Title cannot be empty");
         }
 
         var userExists = await _taskRepository.UserExistsAsync(task.userid); 

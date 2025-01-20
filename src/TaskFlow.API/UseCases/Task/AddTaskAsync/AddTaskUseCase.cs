@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using TaskFlow.API.Database;
 using TaskFlow.API.DTO.TaskCreateDTO;
 using TaskFlow.API.Entities;
@@ -9,20 +11,28 @@ public class AddTaskUseCase
 {
     private readonly TaskService _taskService;
     private readonly TaskFlowDbContext _dbContext;
+    private readonly IValidator<TaskCreateAndUpdateDTO> _validator;
 
     public AddTaskUseCase(
         TaskService taskService,
-        TaskFlowDbContext dbContext)
+        TaskFlowDbContext dbContext,
+        IValidator<TaskCreateAndUpdateDTO> validator)
     {
         _taskService = taskService;
         _dbContext = dbContext;
+        _validator = validator;
     }
 
     public async Task<TaskEntity> Execute(TaskCreateAndUpdateDTO taskDTO)
     {
 
-        var userExists = await _dbContext.users.AnyAsync(
-            u => u.id == taskDTO.userid);
+        ValidationResult validationResult = _validator.Validate(taskDTO);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException("Validation failed", validationResult.Errors);
+        }
+
+        var userExists = await _dbContext.users.AnyAsync(u => u.id == taskDTO.userid);
 
         if (!userExists)
         {

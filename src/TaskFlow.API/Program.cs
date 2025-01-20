@@ -14,6 +14,9 @@ using Microsoft.OpenApi.Models;
 using TaskFlow.API.UseCases.Task.DeleteTaskAsync;
 using TaskFlow.API.UseCases.Task.UpdateTaskAsync;
 using TaskFlow.API.UseCases.Task.GetTaskByNameAsync;
+using TaskFlow.API.Validators;
+using FluentValidation;
+using TaskFlow.API.DTO.TaskCreateDTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,9 +83,9 @@ builder.Services.AddAuthentication(options =>
 
 // Database
 builder.Services.AddDbContext<TaskFlowDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
-    //.EnableSensitiveDataLogging()
-    //.LogTo(Console.WriteLine));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"))
+    .EnableSensitiveDataLogging() // Ativar apenas em desenvolvimento
+    .LogTo(Console.WriteLine));
 
 // Dependencies
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
@@ -97,6 +100,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DeleteTaskUseCase>();
 builder.Services.AddScoped<UpdateTaskUseCase>();
 builder.Services.AddScoped<GetTaskByNameUseCase>();
+builder.Services.AddScoped<IValidator<TaskCreateAndUpdateDTO>, TaskCreateAndUpdateValidator>();
 
 var app = builder.Build();
 
@@ -110,4 +114,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 app.Run();
+
