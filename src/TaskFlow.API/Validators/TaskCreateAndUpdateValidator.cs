@@ -20,6 +20,7 @@ public class TaskCreateAndUpdateValidator : AbstractValidator<TaskCreateAndUpdat
         RuleFor(t => t.enddate)
             .GreaterThan(DateTime.UtcNow).WithMessage("End date must be in the future.");
 
+        // isso aqui precisa ser visto pelo token ou login não sei
         RuleFor(t => t.userid)
             .NotEmpty().WithMessage("UserId is required.");
     }
